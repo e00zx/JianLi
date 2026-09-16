@@ -1,0 +1,108 @@
+/* ============================================
+   像素工坊 · 设计变量与主题
+   ============================================ */
+
+/* ---- 主题 1: 雾烟粉黛（默认） ---- */
+:root,
+[data-theme="misty-pink"] {
+  --color-primary: #D8C2D6;
+  --color-primary-deep: #C09EC0;
+  --color-secondary: #B8CDE0;
+  --color-secondary-deep: #8FA9C4;
+  --color-bg: #F5F3F0;
+  --color-bg-elevated: #FFFFFF;
+  --color-text: #5A5A6A;
+  --color-title: #2C2C3A;
+  --color-highlight: #FFFFFF;
+  --color-shadow: #C8C4D0;
+  --color-border: #E2DEE4;
+  --particle-color: 196, 158, 192;
+  --star-color: 143, 169, 196;
+  --font-heading: "Noto Sans SC", sans-serif;
+  --font-body: "Noto Sans SC", sans-serif;
+  --cube-palette: 0xD8C2D6, 0xB8CDE0, 0xFFFFFF, 0xC8C4D0, 0xE8D9E8;
+  --nav-bg: rgba(245, 243, 240, 0.82);
+}
+
+/* ---- 主题 2: 赛博霓虹 ---- */
+[data-theme="cyber-neon"] {
+  --color-primary: #9D4EDD;
+  --color-primary-deep: #7B2CBF;
+  --color-secondary: #00F5D4;
+  --color-secondary-deep: #00B4A0;
+  --color-bg: #1A1A2E;
+  --color-bg-elevated: #16213E;
+  --color-text: #C9D1D9;
+  --color-title: #FFFFFF;
+  --color-highlight: #FF00FF;
+  --color-shadow: #0F0F1E;
+  --color-border: #2D2D4A;
+  --particle-color: 0, 245, 212;
+  --star-color: 157, 78, 221;
+  --cube-palette: 0x9D4EDD, 0x00F5D4, 0xFF00FF, 0x16213E, 0x5390D9;
+  --nav-bg: rgba(26, 26, 46, 0.85);
+}
+
+/* ---- 主题 3: 复古像素 ---- */
+[data-theme="retro-pixel"] {
+  --color-primary: #F4A261;
+  --color-primary-deep: #E76F51;
+  --color-secondary: #2A9D8F;
+  --color-secondary-deep: #1D7A6F;
+  --color-bg: #0F3D2E;
+  --color-bg-elevated: #155340;
+  --color-text: #E9C46A;
+  --color-title: #F4F1DE;
+  --color-highlight: #E9C46A;
+  --color-shadow: #082A20;
+  --color-border: #1D5C46;
+  --particle-color: 244, 162, 97;
+  --star-color: 233, 196, 106;
+  --cube-palette: 0xF4A261, 0x2A9D8F, 0xE9C46A, 0xE76F51, 0xF4F1DE;
+  --nav-bg: rgba(15, 61, 46, 0.88);
+}
+
+/* ---- 主题 4: 莫兰迪 ---- */
+[data-theme="morandi"] {
+  --color-primary: #A8B5A0;
+  --color-primary-deep: #8A9A82;
+  --color-secondary: #C4B5A5;
+  --color-secondary-deep: #A89685;
+  --color-bg: #E8E0D5;
+  --color-bg-elevated: #F2ECE2;
+  --color-text: #6B6258;
+  --color-title: #4A443C;
+  --color-highlight: #FFFFFF;
+  --color-shadow: #C9BEAE;
+  --color-border: #D8CDBD;
+  --particle-color: 168, 181, 160;
+  --star-color: 196, 181, 165;
+  --cube-palette: 0xA8B5A0, 0xC4B5A5, 0xE8E0D5, 0xC9BEAE, 0x9DAEA0;
+  --nav-bg: rgba(232, 224, 213, 0.88);
+}
+
+/* ---- 主题 5: 暗夜星辰 ---- */
+[data-theme="night-stars"] {
+  --color-primary: #778DA9;
+  --color-primary-deep: #5A7090;
+  --color-secondary: #E0E1DD;
+  --color-secondary-deep: #B8BAC2;
+  --color-bg: #0D1B2A;
+  --color-bg-elevated: #1B263B;
+  --color-text: #B8C0CC;
+  --color-title: #E0E1DD;
+  --color-highlight: #F1FAEE;
+  --color-shadow: #06101C;
+  --color-border: #24344D;
+  --particle-color: 119, 141, 169;
+  --star-color: 224, 225, 221;
+  --cube-palette: 0x778DA9, 0xE0E1DD, 0x415A77, 0x1B263B, 0x9FD8FF;
+  --nav-bg: rgba(13, 27, 42, 0.88);
+}
+
+/* ---- 字体大小响应式变量 ---- */
+:root {
+  --nav-height: 64px;
+  --radius: 4px;
+  --transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="misty-pink">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>像素工坊 · AI 作品集</title>
+  <meta name="description" content="3D 像素风格个人 AI 作品展示网站">
+
+  <!-- 字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Noto+Serif+SC:wght@700;900&family=Press+Start+2P&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+
+  <!-- 样式 -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- 粒子背景画布 -->
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- 像素 Loading 层 -->
+  <div id="loading-screen">
+    <div class="loading-cube">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <p class="loading-text">正在构建像素世界...</p>
+  </div>
+
+  <!-- ============ 顶部导航 ============ -->
+  <header class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#home" data-nav-link="home">
+        <span class="logo-cube"></span>
+        <span class="logo-text" data-editable="site.name">像素工坊</span>
+      </a>
+      <nav class="nav-links" id="nav-links">
+        <a href="#home"   class="nav-link" data-nav-link="home">首页</a>
+        <a href="#works"  class="nav-link" data-nav-link="works">作品</a>
+        <a href="#about"  class="nav-link" data-nav-link="about">关于我</a>
+        <a href="#contact" class="nav-link" data-nav-link="contact">联系</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="icon-btn" id="audio-toggle" title="音效开关">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+        </button>
+        <button class="icon-btn" id="workshop-toggle" title="打开内容工坊">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+        </button>
+        <button class="hamburger" id="hamburger" aria-label="菜单">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+    <!-- ============ 首页 ============ -->
+    <section class="page page-home active" data-page="home">
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-3d" id="hero-3d"></div>
+        <div class="hero-content">
+          <h1 class="hero-title pixel-shadow" data-editable="home.hero.title">像素工坊</h1>
+          <p class="hero-subtitle" data-editable="home.hero.subtitle">AI 生成艺术 · 立方像素世界</p>
+        </div>
+        <div class="hero-scroll-hint">
+          <span>向下滚动</span>
+          <div class="scroll-arrow"></div>
+        </div>
+      </div>
+
+      <!-- 精选作品 -->
+      <div class="section">
+        <div class="section-head reveal">
+          <h2 class="section-title pixel-shadow">精选作品</h2>
+          <span class="section-tag">FEATURED</span>
+        </div>
+        <div class="works-grid" id="featured-grid"></div>
+        <div class="section-more reveal">
+          <button class="btn btn-ghost" data-goto="works">查看全部作品 →</button>
+        </div>
+      </div>
+
+      <!-- 关于简介 -->
+      <div class="section about-preview reveal">
+        <div class="about-card pixel-border">
+          <div class="about-avatar-wrap">
+            <img class="about-avatar" id="home-avatar" alt="头像">
+          </div>
+          <div class="about-text">
+            <h3 class="about-name" data-editable="about.name">创作者</h3>
+            <p class="about-intro" data-editable="home.aboutPreview.intro">热爱用 AI 探索视觉边界的数字艺术家，在像素与光之间构建想象中的世界。</p>
+            <button class="btn btn-primary btn-sm" data-goto="about">了解更多 →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 联系入口 -->
+      <div class="section contact-cta reveal">
+        <div class="contact-banner pixel-border">
+          <h2 class="contact-banner-title" data-editable="home.contactPreview.text">欢迎合作交流</h2>
+          <button class="btn btn-primary" data-goto="contact" data-editable="home.contactPreview.ctaText">联系我</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 作品集 ============ -->
+    <section class="page page-works" data-page="works">
+      <div class="page-head">
+        <h1 class="page-title pixel-shadow">作品集</h1>
+        <p class="page-desc">AI 漫剧资产 · 视频成片 · 独立创作</p>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="works-search" placeholder="搜索作品标题、系列、标签...">
+        </div>
+      </div>
+
+      <!-- 分区大标签 -->
+      <div class="section-tabs" id="section-tabs">
+        <button class="section-tab active" data-section="gallery">
+          <span class="st-label">图片作品</span><span class="st-count" id="count-gallery">0</span>
+        </button>
+        <button class="section-tab" data-section="video">
+          <span class="st-label">视频作品</span><span class="st-count" id="count-video">0</span>
+        </button>
+        <button class="section-tab" data-section="other">
+          <span class="st-label">其他作品</span><span class="st-count" id="count-other">0</span>
+        </button>
+      </div>
+
+      <!-- 搜索结果视图（跨分区） -->
+      <div class="works-section" id="search-results-view" style="display:none;">
+        <h3 class="search-result-title">搜索结果</h3>
+        <div class="works-grid" id="search-grid"></div>
+        <p class="works-empty" id="search-empty" style="display:none;">未找到匹配的作品</p>
+      </div>
+
+      <!-- 图片作品：系列折叠组 -->
+      <div class="works-section" id="section-gallery">
+        <div id="series-groups"></div>
+        <div class="section-empty" id="empty-gallery" style="display:none;">
+          <div class="empty-icon">🖼</div>
+          <p>还没有漫剧图片资产</p>
+          <span>点击右上角扳手图标，在「作品」标签中添加图片资产</span>
+        </div>
+      </div>
+
+      <!-- 视频作品：大方块网格 -->
+      <div class="works-section" id="section-video" style="display:none;">
+        <div class="video-grid" id="video-grid"></div>
+        <div class="section-empty" id="empty-video" style="display:none;">
+          <div class="empty-icon">🎬</div>
+          <p>还没有视频作品</p>
+          <span>在工坊「作品」标签中粘贴 B站 / YouTube 视频链接即可添加</span>
+        </div>
+      </div>
+
+      <!-- 其他作品 -->
+      <div class="works-section" id="section-other" style="display:none;">
+        <div class="works-grid" id="other-grid"></div>
+        <div class="section-empty" id="empty-other" style="display:none;">
+          <div class="empty-icon">◆</div>
+          <p>暂无其他作品</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 关于我 ============ -->
+    <section class="page page-about" data-page="about">
+      <div class="page-head">
+        <h1 class="page-title pixel-shadow">关于我</h1>
+      </div>
+      <div class="about-section">
+        <div class="about-hero pixel-border reveal">
+          <img class="about-avatar-lg" id="about-avatar" alt="头像">
+          <div>
+            <h2 class="about-name-lg" data-editable="about.name">创作者</h2>
+            <p class="about-bio" data-editable="about.bio">你好，我是一名 AI 数字艺术家。我热衷于使用 Midjourney、Stable Diffusion 等工具，将脑海中的想象转化为视觉作品。3D 像素风、赛博朋克、东方美学都是我探索的方向。</p>
+          </div>
+        </div>
+
+        <div class="about-block reveal">
+          <h3 class="block-title">技能 · 工具</h3>
+          <div class="skills-wrap" id="skills-wrap"></div>
+        </div>
+
+        <div class="about-block reveal">
+          <h3 class="block-title">创作历程</h3>
+          <div class="timeline" id="timeline"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 联系我 ============ -->
+    <section class="page page-contact" data-page="contact">
+      <div class="page-head">
+        <h1 class="page-title pixel-shadow">联系我</h1>
+        <p class="page-desc">欢迎合作、交流或只是打个招呼</p>
+      </div>
+      <div class="contact-section-vertical">
+        <!-- 联系方式卡片 -->
+        <div class="contact-cards reveal">
+          <div class="contact-card pixel-border">
+            <div class="contact-card-icon">✉</div>
+            <div class="contact-card-body">
+              <span class="contact-card-label">邮箱</span>
+              <span class="contact-card-value" id="contact-email-text"></span>
+            </div>
+            <button class="btn btn-primary btn-sm contact-copy" data-copy="email">复制</button>
+          </div>
+          <div class="contact-card pixel-border">
+            <div class="contact-card-icon">💬</div>
+            <div class="contact-card-body">
+              <span class="contact-card-label">微信</span>
+              <span class="contact-card-value" data-editable="contact.wechat"></span>
+            </div>
+            <button class="btn btn-primary btn-sm contact-copy" data-copy="wechat">复制</button>
+          </div>
+        </div>
+
+        <!-- 社交链接卡片 -->
+        <div class="socials-card pixel-border reveal">
+          <h3 class="block-title">社交媒体</h3>
+          <p class="socials-hint">也可以在这些平台找到我</p>
+          <div class="socials-grid" id="socials-wrap"></div>
+        </div>
+
+        <!-- 合作提示 -->
+        <div class="contact-tips pixel-border reveal">
+          <h3 class="block-title">💡 合作说明</h3>
+          <ul class="tips-list">
+            <li>AI 漫剧资产定制：角色立绘 / 场景背景 / 道具物件</li>
+            <li>漫剧视频与动态成片制作</li>
+            <li>添加微信或发送邮件时，请简单说明你的项目需求</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 页脚 ============ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-logo" data-editable="footer.logo">◆ 像素工坊</span>
+      <span class="footer-copy" data-editable="footer.copy">© 2026 PixelVerse · 用像素构筑想象</span>
+    </div>
+  </footer>
+
+  <!-- ============ 作品详情弹窗 ============ -->
+  <div class="modal" id="work-modal">
+    <div class="modal-mask" data-close-modal></div>
+    <div class="modal-body pixel-border">
+      <button class="modal-close" data-close-modal>×</button>
+      <button class="modal-nav modal-prev" id="modal-prev">‹</button>
+      <button class="modal-nav modal-next" id="modal-next">›</button>
+      <div class="modal-media" id="modal-media"></div>
+      <div class="modal-info">
+        <h2 class="modal-title" id="modal-title"></h2>
+        <div class="modal-meta" id="modal-meta"></div>
+        <p class="modal-desc" id="modal-desc"></p>
+        <div class="modal-prompt" id="modal-prompt"></div>
+        <div class="modal-tags" id="modal-tags"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 工坊面板将由 JS 动态插入 -->
+
+  <!-- Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <!-- 应用脚本（按依赖顺序加载） -->
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/hero3d.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/router.js"></script>
+  <script src="js/workshop.js"></script>
+  <script src="js/exporter.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
