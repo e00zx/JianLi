@@ -5,6 +5,20 @@
 var SiteConfig = null;
 var IS_EXPORT = window.__EXPORT_MODE__ === true;
 
+/* 工坊启用开关：导出模式与公网部署仅保留浏览功能；
+   本地环境（localhost / 内网 IP / file 协议）启用完整工坊。
+   URL 参数可覆盖：?workshop=1 强制启用（线上临时编辑入口），?workshop=0 强制禁用（本地预览公网效果） */
+var WORKSHOP_ENABLED = (function () {
+  if (IS_EXPORT) return false;
+  var q = location.search;
+  if (q.indexOf("workshop=1") > -1) return true;
+  if (q.indexOf("workshop=0") > -1) return false;
+  var h = location.hostname;
+  return !h || h === "localhost" || h === "127.0.0.1" || h === "[::1]" ||
+    /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(h) || location.protocol === "file:";
+})();
+window.WORKSHOP_ENABLED = WORKSHOP_ENABLED;
+
 (function () {
   document.addEventListener("DOMContentLoaded", init);
 
@@ -43,15 +57,16 @@ var IS_EXPORT = window.__EXPORT_MODE__ === true;
     // 8. 绑定 UI 交互
     bindInteractions();
 
-    // 9. 可视化工坊（导出模式不启用）
-    if (!IS_EXPORT) {
+    // 9. 可视化工坊（公网部署仅浏览：移除工坊入口，不初始化）
+    Workshop.updateAudioBtn();
+    if (WORKSHOP_ENABLED) {
       Workshop.init();
-      Workshop.updateAudioBtn();
       Workshop.recordBaseline();
     } else {
-      // 导出模式隐藏工坊开关（按钮已在导出时移除，这里兜底）
       var wt = document.getElementById("workshop-toggle");
-      if (wt) wt.style.display = "none";
+      if (wt) wt.remove();
+      var wp = document.getElementById("workshop-panel");
+      if (wp) wp.remove();
     }
 
     // 10. 隐藏 Loading

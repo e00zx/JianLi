@@ -11,6 +11,7 @@ var Workshop = {
   editingWorkId: null,
 
   init: function () {
+    if (!window.WORKSHOP_ENABLED) return;
     this.buildPanel();
     this.bindGlobal();
     this.switchTab("home");
@@ -108,6 +109,7 @@ var Workshop = {
   },
 
   open: function () {
+    if (!window.WORKSHOP_ENABLED) return;
     this.isOpen = true;
     this.panel.classList.add("open");
     document.body.classList.add("workshop-open", "workshop-editing");
