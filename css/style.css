@@ -820,6 +820,8 @@ body.workshop-editing [data-editable]:hover { outline: 2px dashed var(--color-se
 
 @media (min-width: 1024px) {
   .works-grid { grid-template-columns: repeat(4, 1fr); }
+  /* 首页精选：宽屏 3 列（6 个作品 3×2 对称；平板 3 列、手机 2 列断点下同样整除对称） */
+  #featured-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* 减少动画偏好 */

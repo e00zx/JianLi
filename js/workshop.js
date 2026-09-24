@@ -233,6 +233,13 @@ var Workshop = {
       '<label class="ws-check"><input type="checkbox" id="set-orbit-on"' + (c.home.hero.orbitImages !== false ? " checked" : "") + '> 精选作品图片环绕魔方旋转</label>' +
       this.rangeField("set-orbit-opacity", "环绕图片透明度",
         (c.home.hero.orbitOpacity != null && !isNaN(c.home.hero.orbitOpacity)) ? c.home.hero.orbitOpacity : 0.55, 0.05, 1, 0.05) +
+      this.sectionTitle("发光魔方风格") +
+      '<div class="ws-control"><label>风格模板</label><select id="set-hero-style">' +
+        Object.keys(HERO_CUBE_STYLES).map(id =>
+          '<option value="' + id + '"' + ((c.home.hero.style || "auto") === id ? " selected" : "") + '>' + HERO_CUBE_STYLES[id].label + '</option>'
+        ).join("") +
+      '</select></div>' +
+      '<p style="font-size:0.75rem;color:var(--color-text);margin:4px 0 10px;">切换后魔方灯块配色、核心透光色与环绕发光粒子同步换装</p>' +
       this.sectionTitle("音效") +
       '<label class="ws-check"><input type="checkbox" id="set-audio-on"' + (c.audio.enabled ? " checked" : "") + '> 启用交互音效</label>' +
       this.rangeField("set-volume", "音量", c.audio.volume, 0, 1, 0.05);
@@ -610,6 +617,14 @@ var Workshop = {
       SiteConfig.home.hero.orbitOpacity = parseFloat(oOp.value);
       var oLab = document.getElementById("set-orbit-opacity-val"); if (oLab) oLab.textContent = oOp.value;
       if (window.Hero3D) Hero3D.applyOrbitConfig();
+      this.commit(false);
+    });
+    // 发光魔方风格模板
+    var hStyle = document.getElementById("set-hero-style");
+    if (hStyle) hStyle.addEventListener("change", () => {
+      if (!SiteConfig.home.hero) SiteConfig.home.hero = {};
+      SiteConfig.home.hero.style = hStyle.value;
+      if (window.Hero3D) Hero3D.rebuild();   // 重建灯块/核心/粒子配色
       this.commit(false);
     });
   },

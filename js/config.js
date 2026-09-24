@@ -23,6 +23,15 @@ var DEFAULT_VIDEO_COVER = aiImg(
 /* AI 漫剧图片资产标准类目 */
 var COMIC_CATEGORIES = ["角色立绘", "场景背景", "道具物件"];
 
+/* 主页发光魔方风格模板（palette=灯块发光色 core=核心透光色 glow=发光强度区间 spark=粒子色） */
+var HERO_CUBE_STYLES = {
+  auto:   { label: "跟随主题", palette: null, core: null, glow: [0.5, 0.85], spark: [0xffffff, 0xffd9ec, 0xaee3ff, 0xfff3b0] },
+  cyber:  { label: "赛博霓虹", palette: [0x2a1a4a, 0x9d4edd, 0x00f5d4, 0xff2ec4, 0x4a3aff], core: 0x00f5d4, glow: [0.7, 1.15], spark: [0x00f5d4, 0xff2ec4, 0x9d4edd, 0xffffff] },
+  ember:  { label: "熔金炉火", palette: [0x3a1c12, 0xff7b33, 0xffb347, 0xd94f30, 0x8c2f0f], core: 0xffb347, glow: [0.6, 1.0], spark: [0xffb347, 0xff7b33, 0xffe3a3, 0xffffff] },
+  frost:  { label: "寒霜月辉", palette: [0x1c2a4a, 0x7ec8ff, 0xdbefff, 0x4a9de0, 0x9ad8ff], core: 0xffffff, glow: [0.7, 1.15], spark: [0xffffff, 0xaee3ff, 0x7ec8ff, 0xdbefff] },
+  sakura: { label: "夜樱幻粉", palette: [0x4a1c38, 0xff8fc7, 0xffd6e8, 0xe05a9d, 0x7a2f56], core: 0xffd6e8, glow: [0.6, 1.0], spark: [0xffd6e8, 0xff8fc7, 0xffffff, 0xffc2e0] }
+};
+
 /* 作品分区定义 */
 var WORK_SECTIONS = {
   gallery: { label: "图片作品", desc: "AI 漫剧制作资产 · 按项目系列归档" },
@@ -57,7 +66,9 @@ var DEFAULT_CONFIG = {
       subtitle: "AI 生成艺术 · 立方像素世界",
       /* 主页魔方环绕图：精选作品封面以半透明平面围绕魔方公转，透明度可调 */
       orbitImages: true,
-      orbitOpacity: 0.55
+      orbitOpacity: 0.55,
+      /* 发光魔方风格模板：auto=跟随全站主题，其余取 HERO_CUBE_STYLES 预设 */
+      style: "auto"
     },
     featuredIds: ["w1", "w2", "w3", "w4", "w5", "w6"],
     aboutPreview: {
