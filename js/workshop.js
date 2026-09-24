@@ -91,11 +91,21 @@ var Workshop = {
       // 点击的是面板内部则不处理
       if (e.target.closest("#workshop-panel")) return;
       var el = e.target.closest("[data-editable]");
+      // 可编辑按钮（如首页「联系我」）：单击放行跳转，双击才进入文字编辑
+      if (el && el.hasAttribute("data-goto")) return;
       if (el) {
         e.preventDefault();
         e.stopPropagation();
         this.selectElement(el);
       }
+    }, true);
+
+    // 双击可编辑按钮进入编辑（区别于单击跳转）
+    document.addEventListener("dblclick", e => {
+      if (!this.isOpen) return;
+      if (e.target.closest("#workshop-panel")) return;
+      var el = e.target.closest("[data-editable][data-goto]");
+      if (el) this.selectElement(el);
     }, true);
 
     // ESC 关闭面板
@@ -219,6 +229,10 @@ var Workshop = {
       this.rangeField("set-rain", "粒子雨数量", c.particles.rainCount, 10, 200, 10) +
       this.rangeField("set-star", "星空数量", c.particles.starCount, 20, 300, 10) +
       this.rangeField("set-speed", "下落速度", c.particles.speed, 0.2, 3, 0.1) +
+      this.sectionTitle("主页魔方环绕图") +
+      '<label class="ws-check"><input type="checkbox" id="set-orbit-on"' + (c.home.hero.orbitImages !== false ? " checked" : "") + '> 精选作品图片环绕魔方旋转</label>' +
+      this.rangeField("set-orbit-opacity", "环绕图片透明度",
+        (c.home.hero.orbitOpacity != null && !isNaN(c.home.hero.orbitOpacity)) ? c.home.hero.orbitOpacity : 0.55, 0.05, 1, 0.05) +
       this.sectionTitle("音效") +
       '<label class="ws-check"><input type="checkbox" id="set-audio-on"' + (c.audio.enabled ? " checked" : "") + '> 启用交互音效</label>' +
       this.rangeField("set-volume", "音量", c.audio.volume, 0, 1, 0.05);
@@ -234,6 +248,9 @@ var Workshop = {
     var html = '<div class="ws-add-row">' +
       '<button class="ws-btn accent" id="ws-add-gallery" style="flex:1;">+ 添加图片资产</button>' +
       '<button class="ws-btn accent" id="ws-add-video" style="flex:1;">+ 添加视频</button>' +
+      '</div>' +
+      '<div class="ws-add-row">' +
+      '<button class="ws-btn accent" id="ws-add-other" style="flex:1;">+ 添加其他作品</button>' +
       '</div>';
     groups.forEach(g => {
       var arr = list.filter(w => w.section === g.key);
@@ -509,6 +526,13 @@ var Workshop = {
       document.getElementById("ws-work-editor").innerHTML = this.videoEditor(null);
       this.bindWorkEditor(null);
     });
+    // 作品：添加其他作品
+    var addO = document.getElementById("ws-add-other");
+    if (addO) addO.addEventListener("click", () => {
+      this.editingWorkId = "w" + Date.now();
+      document.getElementById("ws-work-editor").innerHTML = this.otherEditor(null);
+      this.bindWorkEditor(null);
+    });
 
     // 社交：添加
     var addS = document.getElementById("ws-add-social");
@@ -570,6 +594,22 @@ var Workshop = {
       SiteConfig.audio.volume = parseFloat(vol.value);
       AudioFX.volume = parseFloat(vol.value);
       var lab = document.getElementById("set-volume-val"); if (lab) lab.textContent = vol.value;
+      this.commit(false);
+    });
+    // 主页魔方环绕图
+    var oOn = document.getElementById("set-orbit-on");
+    if (oOn) oOn.addEventListener("change", () => {
+      if (!SiteConfig.home.hero) SiteConfig.home.hero = {};
+      SiteConfig.home.hero.orbitImages = oOn.checked;
+      if (window.Hero3D) Hero3D.applyOrbitConfig();
+      this.commit(false);
+    });
+    var oOp = document.getElementById("set-orbit-opacity");
+    if (oOp) oOp.addEventListener("input", () => {
+      if (!SiteConfig.home.hero) SiteConfig.home.hero = {};
+      SiteConfig.home.hero.orbitOpacity = parseFloat(oOp.value);
+      var oLab = document.getElementById("set-orbit-opacity-val"); if (oLab) oLab.textContent = oOp.value;
+      if (window.Hero3D) Hero3D.applyOrbitConfig();
       this.commit(false);
     });
   },

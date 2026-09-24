@@ -13,6 +13,9 @@ var Hero3D = {
   rotVelX: 0, rotVelY: 0.0035,
   palette: [0xD8C2D6, 0xB8CDE0, 0xFFFFFF, 0xC8C4D0, 0xE8D9E8],
   rafId: null,
+  /* 环绕魔方公转的作品图片平面 */
+  orbit: null,
+  orbitOpacity: 0.55,
 
   init: function () {
     this.container = document.getElementById("hero-3d");
@@ -36,6 +39,7 @@ var Hero3D = {
       this.group = new THREE.Group();
       this.buildCubes();
       this.scene.add(this.group);
+      this.buildOrbitImages();
 
       var ambient = new THREE.AmbientLight(0xffffff, 0.75);
       this.scene.add(ambient);
@@ -100,6 +104,115 @@ var Hero3D = {
     }
   },
 
+  /* ---------- 环绕魔方公转的作品图片（半透明 · 透视 · 透明度可调） ---------- */
+
+  heroOrbitConfig: function () {
+    var cfg = (typeof SiteConfig !== "undefined" && SiteConfig.home && SiteConfig.home.hero) || {};
+    return {
+      enabled: cfg.orbitImages !== false,
+      opacity: (cfg.orbitOpacity != null && !isNaN(cfg.orbitOpacity)) ? cfg.orbitOpacity : 0.55
+    };
+  },
+
+  orbitWorks: function () {
+    var list = (typeof SiteConfig !== "undefined" && SiteConfig.works_list) || [];
+    var ids = (typeof SiteConfig !== "undefined" && SiteConfig.home && SiteConfig.home.featuredIds) || [];
+    var imgs = list.filter(function (w) {
+      return w.type !== "video" && w.cover && ids.indexOf(w.id) !== -1;
+    });
+    if (!imgs.length) {
+      imgs = list.filter(function (w) { return w.type !== "video" && w.cover; }).slice(0, 6);
+    }
+    return imgs.slice(0, 8);
+  },
+
+  buildOrbitImages: function () {
+    if (!this.scene) return;
+    this.clearOrbit();
+    var cfg = this.heroOrbitConfig();
+    this.orbitOpacity = cfg.opacity;
+    if (!cfg.enabled) return;
+
+    var works = this.orbitWorks();
+    if (!works.length) return;
+
+    var orbit = new THREE.Group();
+    var loader = new THREE.TextureLoader();
+    loader.setCrossOrigin("anonymous");
+    var radius = 3.5;
+    var self = this;
+
+    works.forEach(function (w, i) {
+      var angle = (i / works.length) * Math.PI * 2;
+      var mat = new THREE.MeshBasicMaterial({
+        transparent: true,
+        opacity: 0,               // 纹理加载完成后渐显到目标透明度
+        side: THREE.DoubleSide,
+        depthWrite: false
+      });
+      var plane = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 1.7), mat);
+      plane.position.set(
+        Math.cos(angle) * radius,
+        Math.sin(i * 1.9) * 0.55,           // 轻微上下错落
+        Math.sin(angle) * radius
+      );
+      plane.userData.targetOpacity = self.orbitOpacity;
+      plane.userData.mapReady = false;
+      orbit.add(plane);
+
+      loader.load(w.cover, function (tex) {
+        tex.minFilter = THREE.LinearFilter;
+        tex.magFilter = THREE.NearestFilter;  // 保持像素风锐利感
+        mat.map = tex;
+        mat.needsUpdate = true;
+        plane.userData.mapReady = true;
+      }, undefined, function () {
+        // 图片跨域或加载失败：从轨道移除该平面
+        orbit.remove(plane);
+        plane.geometry.dispose();
+        mat.dispose();
+      });
+    });
+
+    this.orbit = orbit;
+    this.scene.add(orbit);
+  },
+
+  clearOrbit: function () {
+    if (!this.orbit) return;
+    while (this.orbit.children.length) {
+      var p = this.orbit.children[0];
+      this.orbit.remove(p);
+      if (p.geometry) p.geometry.dispose();
+      if (p.material) {
+        if (p.material.map) p.material.map.dispose();
+        p.material.dispose();
+      }
+    }
+    this.scene.remove(this.orbit);
+    this.orbit = null;
+  },
+
+  /* 工坊设置实时调节入口：开关 / 透明度 */
+  applyOrbitConfig: function () {
+    if (!this.scene) return;
+    var cfg = this.heroOrbitConfig();
+    this.orbitOpacity = cfg.opacity;
+    if (!cfg.enabled) {
+      this.clearOrbit();
+      return;
+    }
+    if (!this.orbit) {
+      this.buildOrbitImages();
+      return;
+    }
+    var self = this;
+    this.orbit.children.forEach(function (p) {
+      p.userData.targetOpacity = self.orbitOpacity;
+      if (p.userData.mapReady) p.material.opacity = self.orbitOpacity; // 调节即时生效
+    });
+  },
+
   bindInteraction: function () {
     var el = this.renderer.domElement;
     var down = (x, y) => { this.isDragging = true; this.prevX = x; this.prevY = y; this.rotVelY = 0; };
@@ -143,6 +256,18 @@ var Hero3D = {
     for (var i = 0; i < this.group.children.length; i++) {
       var c = this.group.children[i];
       c.position.y = c.userData.originalY + Math.sin(t + c.userData.phase) * 0.08;
+    }
+    // 环绕图片：围绕魔方公转 + 始终面向相机（透视化近大远小）+ 透明度渐变
+    if (this.orbit) {
+      this.orbit.rotation.y += 0.0045;
+      var camQuat = this.camera.quaternion;
+      for (var j = 0; j < this.orbit.children.length; j++) {
+        var p = this.orbit.children[j];
+        p.quaternion.copy(camQuat);
+        if (p.userData.mapReady && p.material.opacity < p.userData.targetOpacity) {
+          p.material.opacity = Math.min(p.userData.targetOpacity, p.material.opacity + 0.02);
+        }
+      }
     }
     this.renderer.render(this.scene, this.camera);
   }
