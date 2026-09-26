@@ -66,7 +66,7 @@ var DEFAULT_CONFIG = {
       subtitle: "AI 生成艺术 · 立方像素世界",
       /* 主页魔方环绕图：精选作品封面以半透明平面围绕魔方公转，透明度可调 */
       orbitImages: true,
-      orbitOpacity: 0.55,
+      orbitOpacity: 0.7,
       /* 发光魔方风格模板：auto=跟随全站主题，其余取 HERO_CUBE_STYLES 预设 */
       style: "auto"
     },
