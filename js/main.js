@@ -57,8 +57,8 @@ window.WORKSHOP_ENABLED = WORKSHOP_ENABLED;
     // 8. 绑定 UI 交互
     bindInteractions();
 
-    // 9. 可视化工坊（公网部署仅浏览：移除工坊入口，不初始化）
-    Workshop.updateAudioBtn();
+    // 9. 可视化工坊（导出/公网部署仅浏览：工坊脚本可能已被剔除，需判空）
+    if (window.Workshop) Workshop.updateAudioBtn();
     if (WORKSHOP_ENABLED) {
       Workshop.init();
       Workshop.recordBaseline();
